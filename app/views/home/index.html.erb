@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Homepage</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center mt-3">Welcome to our CSE 3901 Rails Project!</h1>
+      <% if user_signed_in? %>
+        <h3 class="text-center mt-3">Hello, <%= current_user.email %>!</h3>
+      <% else %>
+        <h3 class="text-center mt-3">Please <%= link_to 'login', new_user_session_path %> to continue.</h3>
+      <% end %>
+    </div>
+  </body>
+</html>

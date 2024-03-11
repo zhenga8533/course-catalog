@@ -1,0 +1,67 @@
+<%= form_with(model: course, class: "form") do |form| %>
+  <% if course.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</h2>
+
+      <ul>
+        <% course.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :term %>
+    <%= form.text_field :term, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_field :description, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :subject %>
+    <%= form.text_field :subject, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :catalog_number %>
+    <%= form.number_field :catalog_number, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :campus %>
+    <%= form.text_field :campus, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :course_id %>
+    <%= form.number_field :course_id, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :required_graders %>
+    <%= form.number_field :required_graders, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :created_at %>
+    <%= form.datetime_field :created_at, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :updated_at %>
+    <%= form.datetime_field :updated_at, class: "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Save", class: "btn btn-primary" %>
+  </div>
+<% end %>

@@ -1,0 +1,39 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="container">
+  <%= render @course %>
+
+  <h2>Sections</h2>
+  <div class="accordion" id="sectionsAccordion">
+    <% @course.sections.each do |section| %>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="section<%= section.id %>Header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#section<%= section.id %>Content" aria-expanded="true" aria-controls="section<%= section.id %>Content">
+            Section <%= section.section_number %>
+          </button>
+        </h2>
+        <div id="section<%= section.id %>Content" class="accordion-collapse collapse" aria-labelledby="section<%= section.id %>Header" data-bs-parent="#sectionsAccordion">
+          <div class="accordion-body">
+            <p><strong>Component:</strong> <%= section.component %></p>
+            <p><strong>Instruction Mode:</strong> <%= section.instruction_mode %></p>
+            <p><strong>Building Description:</strong> <%= section.building_description %></p>
+            <p><strong>Schedule:</strong></p>
+            <ul>
+              <li><%= section.monday ? 'Monday ✔' : 'Monday ❌' %></li>
+              <li><%= section.tuesday ? 'Tuesday ✔' : 'Tuesday ❌' %></li>
+              <li><%= section.wednesday ? 'Wednesday ✔' : 'Wednesday ❌' %></li>
+              <li><%= section.thursday ? 'Thursday ✔' : 'Thursday ❌' %></li>
+              <li><%= section.friday ? 'Friday ✔' : 'Friday ❌' %></li>
+              <li><%= section.saturday ? 'Saturday ✔' : 'Saturday ❌' %></li>
+              <li><%= section.sunday ? 'Sunday ✔' : 'Sunday ❌' %></li>
+            </ul>
+            <p><strong>Time:</strong> <%= section.start_time.present? ? section.start_time : '?' %> - <%= section.end_time.present? ? section.end_time : '?' %></p>
+            <p><strong>Dates:</strong> <%= section.start_date %> to <%= section.end_date %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= link_to "Back to courses", courses_path, class: "btn btn-secondary mt-4 mb-2" %>
+</div>

@@ -1,0 +1,21 @@
+<h1>Unverified Users</h1>
+<table class='table table-striped'>
+  <thead>
+    <tr>
+      <th scope='col'>Email</th>
+      <th scope='col'>Role</th>
+      <th scope='col'>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @unverified_users.each do |user| %>
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= user.role %></td>
+        <td>
+          <%= button_to 'Verify', verify_user_path(user), method: :put %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

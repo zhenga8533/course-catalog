@@ -1,0 +1,20 @@
+<div id="<%= dom_id course %>" class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title"><%= course.title %></h5>
+
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><strong>Term:</strong> <%= course.term %></li>
+      <li class="list-group-item"><strong>Title:</strong> <%= course.title %></li>
+      <li class="list-group-item"><strong>Description:</strong> <%= course.description %></li>
+      <li class="list-group-item"><strong>Subject:</strong> <%= course.subject %></li>
+      <li class="list-group-item"><strong>Catalog number:</strong> <%= course.catalog_number %></li>
+      <li class="list-group-item"><strong>Campus:</strong> <%= course.campus %></li>
+      <li class="list-group-item"><strong>Course ID:</strong> <%= course.course_id %></li>
+      <li class="list-group-item"><strong>Required graders:</strong> <%= course.required_graders %></li>
+      <li class="list-group-item"><strong>Created at:</strong> <%= course.created_at %></li>
+      <li class="list-group-item"><strong>Updated at:</strong> <%= course.updated_at %></li>
+    </ul>
+    <%= link_to "Show", course_path(course), class: 'btn btn-success' %>
+    <%= link_to "Edit", edit_course_path(course), class: 'btn btn-primary' if user_signed_in? && current_user.admin? %>
+  </div>
+</div>

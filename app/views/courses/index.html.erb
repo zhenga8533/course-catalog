@@ -1,0 +1,54 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Courses</h1>
+
+<% if user_signed_in? && current_user.admin? %>
+  <div class="admin-search-container mb-3">
+    <%= form_tag(fetch_classes_courses_path, method: :post, class: "form-inline", id: "fetch-classes-form") do %>
+      <div class="form-group mr-2">
+        <%= label_tag "q", "q:" %>
+        <%= text_field_tag "q", "", class: "form-control" %>
+      </div>
+      <div class="form-group mr-2">
+        <%= label_tag "campus", "Campus:" %>
+        <%= text_field_tag "campus", "col", class: "form-control" %>
+      </div>
+      <div class="form-group mr-2">
+        <%= label_tag "term", "Term:" %>
+        <%= text_field_tag "term", "", class: "form-control" %>
+      </div>
+      <div class="form-group mr-2">
+        <%= label_tag "academic_career", "Academic Career:" %>
+        <%= text_field_tag "academic_career", "ungrad", class: "form-control" %>
+      </div>
+      <div class="form-group mr-2">
+        <%= label_tag "subject", "Subject:" %>
+        <%= text_field_tag "subject", "", class: "form-control" %>
+      </div>
+      <div class="form-group mr-2">
+        <%= label_tag "class_attribute", "Class Attribute:" %>
+        <%= text_field_tag "class_attribute", "ge2", class: "form-control" %>
+      </div>
+  
+      <div class="d-flex align-items-end">
+        <%= button_tag "Fetch Classes", class: "btn btn-primary", type: "button", onclick: "submitForm()" %>
+        <%= link_to "New course", new_course_path, class: "btn btn-success" %>
+      </div>
+      <i>Default is CSE Summer 2024*</i><br/>
+    <% end %>
+  </div>
+
+  <script>
+    function submitForm() {
+      document.getElementById('fetch-classes-form').submit();
+    }
+  </script>
+<% end %>
+
+<div class="row">
+  <% @courses.each do |course| %>
+    <div class="col-md-4">
+      <%= render course %>
+    </div>
+  <% end %>
+</div>
