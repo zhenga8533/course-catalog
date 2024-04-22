@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-header">
+    <h3>New Recommendation</h3>
+  </div>
+
+  <div class="card-body">
+    <%= form_with(model: @recommendation) do |form| %>
+      <% if @recommendation.errors.any? %>
+        <div class="alert alert-danger">
+          <h2><%= pluralize(@recommendation.errors.count, "error") %> prohibited this recommendation from being saved:</h2>
+
+          <ul>
+            <% @recommendation.errors.full_messages.each do |error_message| %>
+              <li><%= error_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :student_email, class: "font-weight-bold" %>
+        <%= form.text_field :student_email, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :course_id, class: "font-weight-bold" %>
+        <%= form.collection_select :course_id, @courses, :id, :title, { include_blank: "Select Course" }, { class: "form-control", id: "course-select" } %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :reason, class: "font-weight-bold" %>
+        <%= form.text_area :reason, class: "form-control", rows: 3 %>
+      </div>
+
+      <div>
+        <%= form.submit "Submit", class: "btn btn-success" %>
+        <%= link_to "Back", recommendations_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

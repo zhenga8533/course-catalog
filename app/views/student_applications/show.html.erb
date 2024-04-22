@@ -1,0 +1,73 @@
+<div class="card mb-3">
+  <div class="card-header">
+    <h3>Student Application Details</h3>
+  </div>
+  <div class="card-body">
+    <% if flash[:error] %>
+      <div class="alert alert-danger" role="alert">
+        <%= flash[:error] %>
+      </div>
+    <% end %>
+
+    <p><strong>Contact Info:</strong> <%= @student_application.contact_info %></p>
+    <p><strong>Course:</strong> <%= link_to Course.find(@student_application.course_id).title, course_path(@student_application.course_id), class: "text-decoration-none" %></p>
+    
+    <div class="mb-3">
+      <strong>Status:</strong> <%= @student_application.status %><br/>
+      <% if current_user.admin? %>
+        <% if @student_application.status != 'approved' %>
+          <div class="d-inline-block">
+            <%= form_with(model: @student_application, local: true) do |form| %>
+              <%= select_tag :section_id, options_for_select([["Select Section", nil]] + @sections.map { |section| ["#{section.section_number} (Graders Needed: #{section.required_graders})", section.id] }), id: "section-select" %>
+
+              <%= form.hidden_field :status, value: "approved" %>
+              <%= form.submit 'Approve', class: 'btn-success mr-1' %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="d-inline-block">
+          <%= form_with(model: @student_application, local: true) do |form| %>
+            <%= form.hidden_field :status, value: "denied" %>
+            <% if @student_application.status == 'approved' %>
+              <%= form.submit 'End', class: 'btn-danger mr-1' %>
+            <% elsif @student_application.status != 'denied' %>
+              <%= form.submit 'Deny', class: 'btn-danger mr-1' %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div>
+      <strong>Reason/Preference:</strong>
+      <%= @student_application.preferences_in_grading_assignments %>
+    </div>
+
+    <!-- Links to all recommendations belonging to the owner of the application -->
+    <div class="mt-3">
+      <strong>Recommendations:</strong>
+      <% if @recommendations.any? %>
+        <ul>
+          <% @recommendations.each do |recommendation| %>
+            <% if recommendation.section_id %>
+              <li><%= link_to "From #{recommendation.prof_email} for section #{Section.find(recommendation.section_id).section_number}", recommendation %></li>
+            <% else %>
+              <li><%= link_to "From #{recommendation.prof_email} (No section specified)", recommendation %></li>
+            <% end %>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>No recommendations for selected courses!</p>
+      <% end %>
+    </div>
+
+    <hr>
+
+    <!-- Buttons for editing and navigating back -->
+    <div class="mt-3">
+      <%= link_to 'Edit', edit_student_application_path(@student_application), class: "btn btn-primary mr-2" %>
+      <%= link_to 'Back to List', student_applications_path, class: "btn btn-secondary mr-2" %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<div id="<%= dom_id @section %>" class="card mb-3">
+  <div class="card-header">
+    <h3 class="card-title">New Section</h3>
+  </div>
+  
+  <div class="card-body">
+    <%= form_with(model: [@course, @section], class: "form") do |form| %>
+      <% if @section.errors.any? %>
+        <div class="alert alert-danger">
+          <h4><%= pluralize(@section.errors.count, "error") %> prohibited this section from being saved:</h4>
+          <ul>
+            <% @section.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <% if @course.errors.any? %>
+        <div class="alert alert-danger">
+          <h4><%= pluralize(@course.errors.count, "error") %> prohibited this section from being saved:</h4>
+          <ul>
+            <% @course.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :section_number %>
+        <%= form.number_field :section_number, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :component %>
+        <%= form.text_field :component, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :instruction_mode %>
+        <%= form.text_field :instruction_mode, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :building_description %>
+        <%= form.text_field :building_description, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :start_time %>
+        <%= form.text_field :start_time, class: 'form-control', placeholder: 'HH:MM' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :end_time %>
+        <%= form.text_field :end_time, class: 'form-control', placeholder: 'HH:MM' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :start_date %>
+        <%= form.text_field :start_date, class: 'form-control', placeholder: 'YYYY-MM-DD' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :end_date %>
+        <%= form.text_field :end_date, class: 'form-control', placeholder: 'YYYY-MM-DD' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :monday, class: 'checkbox-inline' do %>
+          <%= form.check_box :monday %> Monday
+        <% end %>
+        <%= form.label :tuesday, class: 'checkbox-inline' do %>
+          <%= form.check_box :tuesday %> Tuesday
+        <% end %>
+        <%= form.label :wednesday, class: 'checkbox-inline' do %>
+          <%= form.check_box :wednesday %> Wednesday
+        <% end %>
+        <%= form.label :thursday, class: 'checkbox-inline' do %>
+          <%= form.check_box :thursday %> Thursday
+        <% end %>
+        <%= form.label :friday, class: 'checkbox-inline' do %>
+          <%= form.check_box :friday %> Friday
+        <% end %>
+        <%= form.label :saturday, class: 'checkbox-inline' do %>
+          <%= form.check_box :saturday %> Saturday
+        <% end %>
+        <%= form.label :sunday, class: 'checkbox-inline' do %>
+          <%= form.check_box :sunday %> Sunday
+        <% end %>
+      </div>
+
+      <%= form.submit "Create", class: "btn btn-success" %>
+      <%= link_to "Back", @course, class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+</div>

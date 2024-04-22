@@ -2,10 +2,34 @@ class CoursesController < ApplicationController
   before_action :authenticate_user!
   before_action :authenticate_admin!, only: [:new, :create, :fetch_classes, :edit, :update, :destroy]
   before_action :set_course, only: [:show, :edit, :update, :destroy]
+  rescue_from ActiveRecord::RecordNotFound, with: :course_not_found
 
   # GET /courses or /courses.json
   def index
-    @courses = Course.all
+    @pagy, @courses = pagy(Course.all, items: 30)
+  
+    # Handle sorting courses
+    if params[:sort_by]
+      case params[:sort_by]
+      when 'title'
+        @courses = @courses.order(title: :asc)
+      when 'catalog_number'
+        @courses = @courses.order(catalog_number: :asc)
+      when 'course_id'
+        @courses = @courses.order(course_id: :asc)
+      else
+      end
+    end
+  
+    # Handle search query
+    if params[:search].present?
+      @courses = @courses.where("title LIKE ?", "%#{params[:search]}%")
+    end
+  
+    # Handle reset button
+    if params[:commit] == "Reset"
+      redirect_to courses_path
+    end
   end
 
   # GET /courses/1 or /courses/1.json
@@ -74,6 +98,11 @@ class CoursesController < ApplicationController
     redirect_to courses_url, notice: "Classes fetched successfully."
   end
 
+  def clear_classes
+    Course.delete_all
+    redirect_to courses_path, notice: 'All classes have been cleared.'
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -83,12 +112,17 @@ class CoursesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def course_params
-    params.require(:course).permit(:term, :title, :description, :subject, :catalog_number, :campus, :course_id, :required_graders, :created_at, :updated_at)
+    params.require(:course).permit(:term, :title, :description, :subject, :catalog_number, :campus, :course_id, :created_at, :updated_at)
   end
 
   def authenticate_admin!
     unless user_signed_in? && current_user.verified && current_user.role == "admin"
       redirect_to root_path, alert: "Access denied."
     end
+  end
+
+  def course_not_found
+    flash[:alert] = "Course not found."
+    redirect_to courses_path
   end
 end

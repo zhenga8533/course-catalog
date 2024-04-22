@@ -1,9 +1,42 @@
-<p style="color: green"><%= notice %></p>
-
 <div class="container">
-  <%= render @course %>
+  <div id="<%= dom_id @course %>" class="card mb-3">
+    <div class="card-header">
+      <h3><%= @course.title %></h3>
+    </div>
 
-  <h2>Sections</h2>
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Term:</strong> <%= @course.term %></li>
+        <li class="list-group-item"><strong>Title:</strong> <%= @course.title %></li>
+        <li class="list-group-item">
+          <strong>Description:</strong>
+          <span class="text-wrap">
+            <%= @course.description %>
+          </span>
+        </li>
+        <li class="list-group-item"><strong>Subject:</strong> <%= @course.subject %></li>
+        <li class="list-group-item"><strong>Catalog number:</strong> <%= @course.catalog_number %></li>
+        <li class="list-group-item"><strong>Campus:</strong> <%= @course.campus %></li>
+        <li class="list-group-item"><strong>Course ID:</strong> <%= @course.course_id %></li>
+        <li class="list-group-item"><strong>Sections:</strong> <%= @course.sections.count %></li>
+        <li class="list-group-item"><strong>Created at:</strong> <%= @course.created_at %></li>
+        <li class="list-group-item"><strong>Updated at:</strong> <%= @course.updated_at %></li>
+      </ul>
+      <%= link_to "Edit", edit_course_path(@course), class: 'btn btn-primary' if user_signed_in? && current_user.admin? %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Sections</h2>
+    </div>
+    <div class="col-md-6 d-flex justify-content-end">
+      <% if user_signed_in? && current_user.admin? %>
+        <%= link_to "+", new_course_section_path(@course), class: 'btn btn-success mb-3' %>
+      <% end %>
+    </div>
+  </div>
+
   <div class="accordion" id="sectionsAccordion">
     <% @course.sections.each do |section| %>
       <div class="accordion-item">
@@ -16,7 +49,7 @@
           <div class="accordion-body">
             <p><strong>Component:</strong> <%= section.component %></p>
             <p><strong>Instruction Mode:</strong> <%= section.instruction_mode %></p>
-            <p><strong>Building Description:</strong> <%= section.building_description %></p>
+            <p><strong>Building Description:</strong> <%= section.building_description.nil? ? "Optional" : section.building_description %></p>
             <p><strong>Schedule:</strong></p>
             <ul>
               <li><%= section.monday ? 'Monday ✔' : 'Monday ❌' %></li>
@@ -27,13 +60,24 @@
               <li><%= section.saturday ? 'Saturday ✔' : 'Saturday ❌' %></li>
               <li><%= section.sunday ? 'Sunday ✔' : 'Sunday ❌' %></li>
             </ul>
-            <p><strong>Time:</strong> <%= section.start_time.present? ? section.start_time : '?' %> - <%= section.end_time.present? ? section.end_time : '?' %></p>
+            <p><strong>Time:</strong> <%= section.start_time.present? ? "#{section.start_time} - #{section.end_time}" : "Asynchronous" %></p>
             <p><strong>Dates:</strong> <%= section.start_date %> to <%= section.end_date %></p>
+            <p><strong>Required Graders:</strong> <%= section.required_graders %></p>
+            <% if user_signed_in? && current_user.admin? %>
+              <div class="d-flex justify-content-between">
+                <div>
+                  <%= link_to "Edit", edit_course_section_path(@course, section), class: 'btn btn-primary' %>
+                </div>
+                <div>
+                  <%= button_to "Delete", course_section_path(@course, section), method: :delete, class: 'btn btn-danger' %>
+                </div>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
     <% end %>
   </div>
 
-  <%= link_to "Back to courses", courses_path, class: "btn btn-secondary mt-4 mb-2" %>
+  <%= link_to "Back", courses_path, class: "btn btn-secondary mt-2 mb-3" %>
 </div>

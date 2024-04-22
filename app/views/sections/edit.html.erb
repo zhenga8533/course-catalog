@@ -1,0 +1,103 @@
+<div id="<%= dom_id @section %>" class="card mb-3">
+  <div class="card-header">
+    <h3>Editing Section</h3>
+  </div>
+
+  <div class="card-body">
+    <%= form_with(model: [@course, @section], class: "form") do |form| %>
+      <% if @section.errors.any? %>
+        <div class="alert alert-danger">
+          <h2><%= pluralize(@section.errors.count, "error") %> prohibited this section from being saved:</h2>
+          <ul>
+            <% @section.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <% if @course.errors.any? %>
+        <div class="alert alert-danger">
+          <h4><%= pluralize(@course.errors.count, "error") %> prohibited this section from being saved:</h4>
+          <ul>
+            <% @course.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :section_number, class: "font-weight-bold" %>
+        <%= form.number_field :section_number, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :component, class: "font-weight-bold" %>
+        <%= form.text_field :component, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :instruction_mode, class: "font-weight-bold" %>
+        <%= form.text_field :instruction_mode, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :building_description, class: "font-weight-bold" %>
+        <%= form.text_field :building_description, class: "form-control" %>
+      </div>
+      
+      <div class="form-group">
+        <%= form.label :required_graders, class: "font-weight-bold" %>
+        <%= form.number_field :required_graders, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :start_time, class: "font-weight-bold" %>
+        <%= form.text_field :start_time, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :end_time, class: "font-weight-bold" %>
+        <%= form.text_field :end_time, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :start_date, class: "font-weight-bold" %>
+        <%= form.text_field :start_date, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :end_date, class: "font-weight-bold" %>
+        <%= form.text_field :end_date, class: "form-control" %>
+      </div>
+
+      <div class="form-group form-inline">
+        <%= form.check_box :monday, class: "form-check-input mr-2" %>
+        <%= form.label :monday, class: "font-weight-bold mr-2" %>
+
+        <%= form.check_box :tuesday, class: "form-check-input mr-2" %>
+        <%= form.label :tuesday, class: "font-weight-bold mr-2" %>
+
+        <%= form.check_box :wednesday, class: "form-check-input mr-2" %>
+        <%= form.label :wednesday, class: "font-weight-bold mr-2" %>
+
+        <%= form.check_box :thursday, class: "form-check-input mr-2" %>
+        <%= form.label :thursday, class: "font-weight-bold mr-2" %>
+
+        <%= form.check_box :friday, class: "form-check-input mr-2" %>
+        <%= form.label :friday, class: "font-weight-bold mr-2" %>
+
+        <%= form.check_box :saturday, class: "form-check-input mr-2" %>
+        <%= form.label :saturday, class: "font-weight-bold mr-2" %>
+
+        <%= form.check_box :sunday, class: "form-check-input mr-2" %>
+        <%= form.label :sunday, class: "font-weight-bold mr-2" %>
+      </div>
+
+      <div class="actions">
+        <%= form.submit "Save", class: "btn btn-success" %>
+        <%= link_to "Back", :back, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

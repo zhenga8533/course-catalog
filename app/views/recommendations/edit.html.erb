@@ -1,0 +1,45 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Editing Recommendation</h3>
+  </div>
+  <div class="card-body">
+    <%= form_with(model: @recommendation) do |form| %>
+      <% if @recommendation.errors.any? %>
+        <div class="alert alert-danger">
+          <h2><%= pluralize(@recommendation.errors.count, "error") %> prohibited this recommendation from being saved:</h2>
+
+          <ul>
+            <% @recommendation.errors.full_messages.each do |error_message| %>
+              <li><%= error_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :student_email, class: "font-weight-bold" %>
+        <%= form.text_field :student_email, class: "form-control", readonly: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :course_title, class: "font-weight-bold" %>
+        <%= form.text_field :course_title, class: "form-control", value: @recommendation.course.title, readonly: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :section_id, class: "font-weight-bold" %>
+        <%= form.collection_select :section_id, [OpenStruct.new(id: nil, section_number: "Select Section")] + @sections, :id, :section_number, { prompt: false }, { class: "form-control", id: "section-select" } %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :reason, class: "font-weight-bold" %>
+        <%= form.text_area :reason, class: "form-control", rows: 3 %>
+      </div>
+
+      <div>
+        <%= form.submit "Save", class: "btn btn-success" %>
+        <%= link_to "Back", recommendation_path(@recommendation), class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>

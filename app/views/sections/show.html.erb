@@ -1,0 +1,34 @@
+<div class="card">
+	<div class="card-header">
+		<h5 class="card-title">Section Details</h5>
+	</div>
+	<div class="card-body">
+		<p><strong>Component:</strong> <%= @section.component %></p>
+		<p><strong>Instruction Mode:</strong> <%= @section.instruction_mode %></p>
+		<p><strong>Building Description:</strong> <%= @section.building_description.nil? ? "Optional" : @section.building_description %></p>
+		<p><strong>Schedule:</strong></p>
+		<ul>
+			<li><%= @section.monday ? 'Monday ✔' : 'Monday ❌' %></li>
+			<li><%= @section.tuesday ? 'Tuesday ✔' : 'Tuesday ❌' %></li>
+			<li><%= @section.wednesday ? 'Wednesday ✔' : 'Wednesday ❌' %></li>
+			<li><%= @section.thursday ? 'Thursday ✔' : 'Thursday ❌' %></li>
+			<li><%= @section.friday ? 'Friday ✔' : 'Friday ❌' %></li>
+			<li><%= @section.saturday ? 'Saturday ✔' : 'Saturday ❌' %></li>
+			<li><%= @section.sunday ? 'Sunday ✔' : 'Sunday ❌' %></li>
+		</ul>
+		<p><strong>Time:</strong> <%= @section.start_time.present? ? "#{@section.start_time} - #{@section.end_time}" : "Asynchronous" %></p>
+		<p><strong>Dates:</strong> <%= @section.start_date %> to <%= @section.end_date %></p>
+		<p><strong>Required Graders:</strong> <%= @section.required_graders %></p>
+		<% if user_signed_in? && current_user.admin? %>
+			<div class="d-flex justify-content-between">
+				<div>
+					<%= link_to "Back", :back, class: "btn btn-secondary" %>
+					<%= link_to "Edit", edit_course_section_path(@course, @section), class: 'btn btn-primary' %>
+				</div>
+				<div>
+					<%= button_to "Delete", course_section_path(@course, @section), method: :delete, class: 'btn btn-danger' %>
+				</div>
+			</div>
+		<% end %>
+	</div>
+</div>

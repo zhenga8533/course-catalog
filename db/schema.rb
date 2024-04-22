@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_11_013222) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_21_180811) do
+  create_table "applications", force: :cascade do |t|
+    t.integer "section_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["section_id"], name: "index_applications_on_section_id"
+    t.index ["user_id"], name: "index_applications_on_user_id"
+  end
+
   create_table "courses", force: :cascade do |t|
     t.string "term"
     t.string "title"
@@ -19,9 +28,34 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_013222) do
     t.integer "catalog_number"
     t.string "campus"
     t.integer "course_id"
-    t.integer "required_graders"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "courses_student_applications", id: false, force: :cascade do |t|
+    t.integer "course_id", null: false
+    t.integer "student_application_id", null: false
+  end
+
+  create_table "grading_assignments", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "section_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["section_id"], name: "index_grading_assignments_on_section_id"
+    t.index ["user_id"], name: "index_grading_assignments_on_user_id"
+  end
+
+  create_table "recommendations", force: :cascade do |t|
+    t.string "student_email"
+    t.string "prof_email"
+    t.integer "section_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "course_id", null: false
+    t.text "reason"
+    t.index ["course_id"], name: "index_recommendations_on_course_id"
+    t.index ["section_id"], name: "index_recommendations_on_section_id"
   end
 
   create_table "sections", force: :cascade do |t|
@@ -43,6 +77,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_013222) do
     t.integer "course_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "required_graders"
+  end
+
+  create_table "student_applications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "status", default: "pending", null: false
+    t.text "preferences_in_grading_assignments"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "contact_info"
+    t.integer "course_id"
+    t.index ["course_id"], name: "index_student_applications_on_course_id"
+    t.index ["status"], name: "index_student_applications_on_status"
+    t.index ["user_id"], name: "index_student_applications_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -55,8 +103,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_11_013222) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "verified"
+    t.json "availability"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "applications", "sections"
+  add_foreign_key "applications", "users"
+  add_foreign_key "grading_assignments", "sections"
+  add_foreign_key "grading_assignments", "users"
+  add_foreign_key "recommendations", "courses"
+  add_foreign_key "recommendations", "sections"
+  add_foreign_key "student_applications", "courses"
+  add_foreign_key "student_applications", "users"
 end

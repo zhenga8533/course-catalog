@@ -1,14 +1,19 @@
 class AdminsController < ApplicationController
+  before_action :authenticate_user!
   before_action :ensure_admin
 
-  def unverified_users
-    @unverified_users = User.where(verified: false)
+  def dashboard
+    @unverified_users = if params[:search_email].present?
+                          User.where(verified: false).where("email LIKE ?", "%#{params[:search_email]}%")
+                        else
+                          User.where(verified: false)
+                        end
   end
 
   def verify_user
     user = User.find(params[:id])
     user.update(verified: true)
-    redirect_to unverified_users_path, notice: "User #{user.email} has been verified."
+    redirect_to dashboard_path, notice: "User #{user.email} has been verified."
   end
 
   private

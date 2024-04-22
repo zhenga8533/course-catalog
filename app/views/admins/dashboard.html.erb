@@ -1,0 +1,84 @@
+<div class="card mb-3">
+  <div class="card-header"><h3>Course Console</h3></div>
+  <div class="card-body">
+    <div class="admin-search-container">
+      <%= form_tag(fetch_classes_courses_path, method: :post, class: "form-inline", id: "fetch-classes-form") do %>
+        <div class="form-group mr-2">
+          <%= label_tag "q", "q:" %>
+          <%= text_field_tag "q", "CSE", class: "form-control" %>
+        </div>
+        <div class="form-group mr-2">
+          <%= label_tag "campus", "Campus:" %>
+          <%= select_tag "campus", options_for_select({ "Columbus" => "col", "Lima" => "lma", "Mansfield" => "mns", "Marion" => "mrn", "Newark" => "nwk", "Wooster" => "wst" }, "col"), class: "form-control" %>
+        </div>
+        <div class="form-group mr-2">
+          <%= label_tag "term", "Term:" %>
+          <%= select_tag "term", options_for_select({ "Spring 2022" => "1222", "Autumn 2022" => "1228", "Spring 2023" => "1232", "Summer 2023" => "1234", "Autumn 2023" => "1238", "Spring 2024" => "1242", "Summer 2024" => "1244", "Autumn 2024" => "1248" }, "1244"), class: "form-control" %>
+        </div>
+        <div class="form-group mr-2">
+          <%= label_tag "academic_career", "Academic Career:" %>
+          <%= select_tag "academic_career", options_for_select({ "Undergraduate" => "ugrad", "Graduate" => "grad", "Pharmacy" => "PHP", "Law" => "LAW", "Veterinary Medicine" => "VMED", "Optometry" => "OPT", "Medicine" => "MED", "Dentistry" => "DENT" }, "ugrad"), class: "form-control" %>
+        </div>
+        <div class="form-group mr-2">
+          <%= label_tag "subject", "Subject:" %>
+          <%= select_tag "subject", options_for_select({ "Select Subject" => "", "Engineering" => "eng", "Arts and Sciences" => "ASC", "Business" => "BUS", "Education & Human Ecology" => "EHE", "Food, Agric & Environ Science" => "AGR", "Health & Rehabilitation Sci" => "HRS", "Pharmacy" => "PHR", "Public Health" => "PBH", "Social Work" => "SWK", "The College of Medicine" => "MED" }), class: "form-control" %>
+        </div>
+    
+        <div class="d-flex align-items-end">
+          <%= button_tag "Fetch Classes", class: "btn btn-primary", type: "button", onclick: "submitForm()" %>
+        </div>
+        <i>Default is CSE Summer 2024*</i><br/><br/>
+      <% end %>
+    </div>
+
+    <b>Other Controls:</b>
+    <div class="d-flex align-items-end">
+      <%= link_to "New course", new_course_path, class: "btn btn-success" %>
+      <%= button_to "Clear Classes", clear_classes_path, method: :delete, class: "btn btn-danger mt-2", data: { confirm: "Are you sure you want to delete all classes?" } %>
+    </div>
+
+    <script>
+      function submitForm() {
+        document.getElementById('fetch-classes-form').submit();
+      }
+    </script>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header"><h3>Unverified Users</h3></div>
+  <div class="card-body">
+    <%= form_with(url: dashboard_path, method: :get, class: "mb-3") do %>
+      <div class="input-group">
+        <%= text_field_tag :search_email, params[:search_email], class: "form-control", placeholder: "Search by email..." %>
+        <div class="input-group-append">
+          <%= submit_tag "Search", class: "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+
+    <table class='table table-striped mt-3'>
+      <thead>
+        <tr>
+          <th scope='col'>Email</th>
+          <th scope='col'>Role</th>
+          <th scope='col'>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @unverified_users.each do |user| %>
+          <tr>
+            <td><%= user.email %></td>
+            <td><%= user.role %></td>
+            <td>
+              <%= button_to 'Verify', verify_user_path(user), method: :put, class: "btn-success" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% unless @unverified_users.any? %>
+      No unverified users found!
+    <% end %>
+  </div>
+</div>

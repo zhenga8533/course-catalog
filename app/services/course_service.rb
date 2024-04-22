@@ -1,13 +1,10 @@
-require 'httparty'
-require 'pagy'
-
 class CourseService
   include HTTParty
-  base_uri 'contenttest.osu.edu/v2/classes/'
+  base_uri 'content.osu.edu/v2/classes/'
 
   def self.fetch_classes(search_params = {})
-    Course.delete_all
-    Section.delete_all
+    # Initialize an empty array to store fetched courses
+    courses = []
 
     # Merge search parameters with default parameters
     default_params = { q: 'cse', client: 'class-search-ui', campus: 'col', term: '1244', academic_career: 'ugrad', subject: 'cse', class_attribute: 'ge2' }
@@ -17,9 +14,8 @@ class CourseService
     
     if response.success?
       data = JSON.parse(response.body)['data']
-      total_items = data['totalItems'] || 0
-
       courses_data = data['courses']
+
       courses_data.each do |course_data|
         course = course_data['course']
         course_attributes = {
@@ -29,19 +25,21 @@ class CourseService
           subject: course['subject'],
           catalog_number: course['catalogNumber'],
           campus: course['campus'],
-          course_id: course['courseId'],
+          course_id: course['courseId']
         }
-        new_course = Course.create(course_attributes)
+        new_course = Course.find_or_create_by(course_attributes)
+        courses << new_course
 
         sections_data = course_data['sections']
         sections_data.each do |section_data|
+          meeting_data = section_data['meetings'][0]
           section_attributes = {
-            section_number: section_data['classNumber'],
+            section_number: Integer(section_data['classNumber']),
             component: section_data['component'],
             instruction_mode: section_data['instructionMode'],
-            building_description: '',
-            start_time: '',
-            end_time: '',
+            building_description: meeting_data['buildingDescription'],
+            start_time: meeting_data['startTime'],
+            end_time: meeting_data['endTime'],
             start_date: section_data['startDate'],
             end_date: section_data['endDate'],
             monday: false,
@@ -51,6 +49,7 @@ class CourseService
             friday: false,
             saturday: false,
             sunday: false,
+            required_graders: 1,
             course_id: new_course.id
           }
 
@@ -63,22 +62,16 @@ class CourseService
             section_attributes['friday'] ||= section_meeting['friday']
             section_attributes['saturday'] ||= section_meeting['saturday']
             section_attributes['sunday'] ||= section_meeting['sunday']
-            section_attributes['building_description'] = section_meeting['buildingDescription']
-            section_attributes['start_time'] = section_meeting['startTime']
-            section_attributes['end_time'] = section_meeting['endTime']
           end
 
           Section.create(section_attributes)
         end
       end
+
+      { courses: courses }
     else
       puts "Error: #{response.code} - #{response.message}"
-      return { error: "Error: #{response.code} - #{response.message}" }
+      { error: "Error: #{response.code} - #{response.message}" }
     end
-    
-    pagy = Pagy.new(count: total_items, page: response.headers['X-Page'] || 1, items: response.headers['X-Per-Page'] || Pagy::DEFAULT[:items_per_page])
-    courses = Course.all.offset(pagy.offset).limit(pagy.items)
-
-    { courses: courses, pagy: pagy }
   end
 end

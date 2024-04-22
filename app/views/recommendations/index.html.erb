@@ -1,0 +1,47 @@
+<div class="card mb-3">
+  <div class="card-header"><h3>Recommendations</h3></div>
+  <div class="card-body">
+    <% if current_user.admin? %>
+      <%= form_tag(recommendations_path, method: "get", class: "form-inline mb-3") do %>
+        <div class="form-group d-flex">
+          <%= select_tag "course_filter", options_from_collection_for_select(Course.order(title: :asc), :id, :title, params[:course_filter]), { prompt: "Select Course", class: "form-control" } %>
+          <%= submit_tag "Search", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+      <%= link_to "Create Recommendation", new_recommendation_path, class: "btn btn-success" %>
+      <br/><br/>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Student Email</th>
+            <th>Professor Email</th>
+            <th>Course</th>
+            <th>Section</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @recommendations.each do |recommendation| %>
+            <tr>
+              <td><%= link_to recommendation.student_email, profile_path(User.find_by(email: recommendation.student_email)), class: "text-decoration-none" %></td>
+              <td><%= link_to recommendation.prof_email, profile_path(User.find_by(email: recommendation.prof_email)), class: "text-decoration-none" %></td>
+              <td><%= link_to Course.find(recommendation.course_id).title, course_path(recommendation.course_id), class: "text-decoration-none" %></td>
+              <td>
+                <% if recommendation.section_id %>
+                  <%= link_to Section.find(recommendation.section_id).section_number, course_section_path(recommendation.course_id, recommendation.section_id), class: "text-decoration-none" %>
+                <% else %>
+                  N/A
+                <% end %>
+              </td>
+              <td><%= button_to "Show", recommendation, method: :get, class: "btn-primary" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <% unless @recommendations.any? %>
+        No recommendations found!
+      <% end %>
+    <% end %>
+  </div>
+</div>

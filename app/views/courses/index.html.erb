@@ -1,54 +1,54 @@
-<p style="color: green"><%= notice %></p>
-
 <h1>Courses</h1>
 
-<% if user_signed_in? && current_user.admin? %>
-  <div class="admin-search-container mb-3">
-    <%= form_tag(fetch_classes_courses_path, method: :post, class: "form-inline", id: "fetch-classes-form") do %>
+<div class="card mb-3">
+  <div class="card-header">Search Box</div>
+  <div class="card-body">
+    <%= form_tag(courses_path, method: :get, class: "form-inline") do %>
       <div class="form-group mr-2">
-        <%= label_tag "q", "q:" %>
-        <%= text_field_tag "q", "", class: "form-control" %>
+        <%= label_tag "sort_by", "Sort by:" %>
+        <%= select_tag "sort_by", options_for_select([["Select Option", ""], ["Title", "title"], ["Catalog Number", "catalog_number"], ["Course ID", "course_id"], ["Required Graders", "required_graders"]], params[:sort_by] || ""), class: "form-control mr-2" %>
       </div>
-      <div class="form-group mr-2">
-        <%= label_tag "campus", "Campus:" %>
-        <%= text_field_tag "campus", "col", class: "form-control" %>
+
+      <div class="form-group">
+        <%= label_tag "search", "Search:" %>
+        <%= text_field_tag "search", params[:search], class: "form-control mr-2", placeholder: "Enter course title" %>
       </div>
-      <div class="form-group mr-2">
-        <%= label_tag "term", "Term:" %>
-        <%= text_field_tag "term", "", class: "form-control" %>
-      </div>
-      <div class="form-group mr-2">
-        <%= label_tag "academic_career", "Academic Career:" %>
-        <%= text_field_tag "academic_career", "ungrad", class: "form-control" %>
-      </div>
-      <div class="form-group mr-2">
-        <%= label_tag "subject", "Subject:" %>
-        <%= text_field_tag "subject", "", class: "form-control" %>
-      </div>
-      <div class="form-group mr-2">
-        <%= label_tag "class_attribute", "Class Attribute:" %>
-        <%= text_field_tag "class_attribute", "ge2", class: "form-control" %>
-      </div>
-  
-      <div class="d-flex align-items-end">
-        <%= button_tag "Fetch Classes", class: "btn btn-primary", type: "button", onclick: "submitForm()" %>
-        <%= link_to "New course", new_course_path, class: "btn btn-success" %>
-      </div>
-      <i>Default is CSE Summer 2024*</i><br/>
+
+      <%= submit_tag "Search", class: "btn btn-primary mr-2" %>
+      <%= link_to "Reset", courses_path, class: "btn btn-danger" %>
     <% end %>
   </div>
-
-  <script>
-    function submitForm() {
-      document.getElementById('fetch-classes-form').submit();
-    }
-  </script>
-<% end %>
+</div>
 
 <div class="row">
   <% @courses.each do |course| %>
     <div class="col-md-4">
-      <%= render course %>
+      <div id="<%= dom_id course %>" class="card mb-3">
+        <div class="card-header">
+          <b><%= course.title %></b>
+        </div>
+
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Term:</strong> <%= course.term %></li>
+            <li class="list-group-item"><strong>Title:</strong> <%= course.title %></li>
+            <li class="list-group-item"><strong>Description:</strong> <%= course.description %></li>
+            <li class="list-group-item"><strong>Subject:</strong> <%= course.subject %></li>
+            <li class="list-group-item"><strong>Catalog number:</strong> <%= course.catalog_number %></li>
+            <li class="list-group-item"><strong>Campus:</strong> <%= course.campus %></li>
+            <li class="list-group-item"><strong>Course ID:</strong> <%= course.course_id %></li>
+            <li class="list-group-item"><strong>Sections:</strong> <%= course.sections.count %></li>
+            <li class="list-group-item"><strong>Created at:</strong> <%= course.created_at %></li>
+            <li class="list-group-item"><strong>Updated at:</strong> <%= course.updated_at %></li>
+          </ul>
+          <%= link_to "Show", course_path(course), class: 'btn btn-success' %>
+          <%= link_to "Edit", edit_course_path(course), class: 'btn btn-primary' if user_signed_in? && current_user.admin? %>
+        </div>
+      </div>
     </div>
   <% end %>
+</div>
+
+<div class="pagination">
+  <%== pagy_bootstrap_nav(@pagy) %>
 </div>

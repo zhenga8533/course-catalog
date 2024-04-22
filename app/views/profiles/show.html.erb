@@ -1,0 +1,46 @@
+<div class="card mb-3">
+  <div class="card-header">
+    <h3 class="card-title">User Profile</h3>
+  </div>
+
+  <div class="card-body">
+    <p class="card-text"><strong>Email:</strong> <%= @profile.email %></p>
+    <p class="card-text"><strong>Role:</strong> <%= @profile.role %></p>
+    <p class="card-text"><strong>Verified:</strong> <%= @profile.verified %></p>
+    <% if @profile.sections.any? %>
+      <p class="card-text"><strong>Grading:</strong></p>
+      <ul>
+        <% @profile.sections.each do |section| %>
+          <li><%= link_to "#{section.course.title}: #{section.section_number}", course_section_path(section.course, section) %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <div>
+      <p class="card-text"><strong>Availability:</strong></p>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th class="text-center" style="width: 10%;">Time</th>
+            <% Date::DAYNAMES.each do |day| %>
+              <th class="text-center" style="width: 10%;"><%= day %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% (0..47).each do |i| %>
+            <tr>
+              <th class="text-center"><%= i.even? ? "#{i / 2}:00-#{i / 2}:30" : "#{i / 2}:30-#{(i + 1) / 2}:00" %></th>
+              <% Date::DAYNAMES.each do |day| %>
+                <td class="text-center">
+                  <%= @profile.availability[day.downcase][i] == "true" ? '✔' : '❌' %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= link_to "Back", :back, class: "btn btn-secondary mr-2" %>
+  </div>
+</div>

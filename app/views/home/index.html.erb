@@ -11,6 +11,10 @@
       <% else %>
         <h3 class="text-center mt-3">Please <%= link_to 'login', new_user_session_path %> to continue.</h3>
       <% end %>
+
+      <% if !current_user.nil? && !current_user.verified %>
+        <h3 class="text-center text-danger mt-3">Please ask an admin to verify your account!</h3>
+      <% end %>
     </div>
   </body>
 </html>

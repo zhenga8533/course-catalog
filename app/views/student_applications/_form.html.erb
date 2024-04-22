@@ -1,0 +1,31 @@
+<%= form_with(model: @student_application, local: true, class: "mt-4", id: "studentApplicationForm") do |form| %>
+  <% if @student_application.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger">
+      <h2><%= pluralize(@student_application.errors.count, "error") %> prohibited this application from being saved:</h2>
+      <ul>
+      <% @student_application.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :contact_info, class: "font-weight-bold" %>
+    <%= form.text_field :contact_info, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :course_id, class: "font-weight-bold" %>
+    <%= form.collection_select :course_id, @courses, :id, :title, { include_blank: "Select Course" }, { class: "form-control", id: "course-select" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :preferences_in_grading_assignments, "Preference in Grading Assignments", class: "font-weight-bold" %>
+    <%= form.text_area :preferences_in_grading_assignments, class: "form-control", rows: 5 %>
+  </div>
+
+  <div class="form-group">
+    <%= form.submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

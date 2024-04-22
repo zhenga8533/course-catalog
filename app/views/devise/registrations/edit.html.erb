@@ -1,6 +1,6 @@
-<div class="card">
+<div class="card mb-3">
   <div class="card-header">
-    <h3>Edit <%=resource.role %> Profile</h3>
+    <h3>Edit <%= resource.role %> Profile</h3>
   </div>
   <div class="card-body">
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
@@ -33,14 +33,25 @@
       </div>
 
       <div class="actions">
-        <%= link_to "Back", :back, class: "btn btn-secondary" %>
-        <%= f.submit "Update", class: "btn btn-secondary" %>
+        <%= f.submit "Update", class: "btn btn-success" %>
+        <%= link_to "Availability", user_availability_path, class: "btn btn-primary" %>
       </div>
     <% end %>
   </div>
 </div>
 
-<br/>
+<% if resource.sections.any? %>
+  <div class="card mb-3">
+    <div class="card-header">
+      <h3>Grading Section</h3>
+    </div>
+    <div class="card-body">
+      <% resource.sections.each do |section| %>
+        <li><%= link_to "#{section.course.title}: #{section.section_number}", course_section_path(section.course, section) %></li>
+      <% end %>
+    </div>
+  </div>
+<% end %>
 
 <div class="card">
   <div class="card-header">
@@ -52,5 +63,3 @@
     </div>
   </div>
 </div>
-
-<br/>

@@ -19,8 +19,13 @@
   <body>
     <%= render 'home/header' %>
 
-    <div class='container'>
-      <br/>
+    <div class='container'><br/>
+      <% if notice.present? %>
+        <div class="alert alert-success" role="alert">
+          <%= notice %>
+        </div>
+      <% end %>
+
       <%= yield %>
     </div>
 
